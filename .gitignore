@@ -77,3 +77,18 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.suo
+*.log
+Debug/Il2CppDumper.pdb
+*.tlog
+Debug/Il2CppDumper.ilk
+*.opensdf
+Debug/vc140.pdb
+*.idb
+ipch/IL2CPPDUMPER-cbbe7c60/IL2CPPDUMPER-42195c63.ipch
+*.pdb
+Release/Il2CppDumper.ipdb
+*.iobj
+Release/out.idc
+*.idc
+*.sdf
