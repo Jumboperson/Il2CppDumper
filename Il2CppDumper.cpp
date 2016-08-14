@@ -321,6 +321,10 @@ void LoadIl2CppLib(char* szFile)
 		exit(1);
 	}
 	
+	// Someone asked me about these two constants so I thought I should document what they are.
+	// These two pointers are the first two arguments passed to il2cpp::vm::MetadataCache::Register in the libil2cpp.so binary.
+	// Updating them manually should be fairly trivial, just find where il2cpp::vm::MetadataCache::Register is called and use the first two args for \
+	  code and metadata respectively.
 	pCodeRegistration = (Il2CppCodeRegistration*)MapVATR(0x1473AF8, pLibIl2Cpp);
 	pMetadataRegistration = (Il2CppMetadataRegistration*)MapVATR(0x14957F4, pLibIl2Cpp);
 
