@@ -275,7 +275,7 @@ void dump_field(FieldIndex idx)
 
 void dump_class(Il2CppTypeDefinition* pDef)
 {
-	fprintf_s(stdout, "// Namespace: %s\nclass %s\n{\n", GetString(pDef->namespaceIndex), GetString(pDef->nameIndex));
+	fprintf_s(stdout, "// Namespace: %s\nclass %s // TypeDefinitionIndex: %d\n{\n", GetString(pDef->namespaceIndex), GetString(pDef->nameIndex), type_index_mapping[pDef->byvalTypeIndex]);
 
 
 	fprintf_s(stdout, "\t// Fields\n");
