@@ -10,8 +10,6 @@ extern Il2CppImage* pImageTable;
 extern Il2CppCodeRegistration* pCodeRegistration;
 extern Il2CppMetadataRegistration* pMetadataRegistration;
 
-extern std::map<TypeIndex, TypeDefinitionIndex> type_index_mapping;
-
 char* GetString(StringIndex idx);
 
 Il2CppMethodDefinition* GetMethodDefinition(MethodIndex idx);

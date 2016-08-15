@@ -285,8 +285,9 @@ void dump_field(FieldIndex idx)
 	fputs(";\n", stdout);
 }
 
-void dump_class(Il2CppTypeDefinition* pDef)
+void dump_class(TypeDefinitionIndex idx)
 {
+	Il2CppTypeDefinition* pDef = GetTypeDefFromIndex(idx);
 	fprintf_s(stdout, "// Namespace: %s\n", GetString(pDef->namespaceIndex));
 	
 	if (pDef->flags & TYPE_ATTRIBUTE_SERIALIZABLE)
@@ -303,7 +304,7 @@ void dump_class(Il2CppTypeDefinition* pDef)
 		fprintf_s(stdout, "interface ");
 	else
 		fprintf_s(stdout, "class ");
-	fprintf_s(stdout, "%s // TypeDefinitionIndex: %d\n{\n", GetString(pDef->nameIndex), type_index_mapping[pDef->byvalTypeIndex]);
+	fprintf_s(stdout, "%s // TypeDefIndex: %d\n{\n", GetString(pDef->nameIndex), idx);
 
 	
 	fprintf_s(stdout, "\t// Fields\n");
@@ -378,7 +379,7 @@ int main(uint16_t argc, char** argv)
 	//	dump_method(i);
 
 	for (uint32_t i = 0; i < uiNumTypes; ++i)
-		dump_class(GetTypeDefFromIndex(i));
+		dump_class(i);
 
     return 0;
 }

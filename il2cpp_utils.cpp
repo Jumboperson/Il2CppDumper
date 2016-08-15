@@ -27,14 +27,6 @@ Il2CppTypeDefinition* GetTypeDefFromIndex(TypeDefinitionIndex idx)
 	return ((Il2CppTypeDefinition*)((char*)GetOffPtr(pMetadataHdr->typeDefinitionsOffset))) + idx;
 }
 
-Il2CppTypeDefinition* GetTypeDefFromTypeIndex(TypeIndex idx)
-{
-	Il2CppTypeEnum eType = pMetadataRegistration->types[idx]->type;
-	if (eType == IL2CPP_TYPE_CLASS || eType == IL2CPP_TYPE_VALUETYPE)
-		return GetTypeDefFromIndex(pMetadataRegistration->types[idx]->data.klassIndex);
-	return GetTypeDefFromIndex(type_index_mapping[idx]);
-}
-
 Il2CppType* GetTypeFromTypeIndex(TypeIndex idx)
 {
 	if ((uint32_t)idx >= (uint32_t)pMetadataRegistration->typesCount)
@@ -119,12 +111,5 @@ void LoadMetadata(char* szFile)
 		image->entryPointIndex = imageDefinition->entryPointIndex;
 		image->token = imageDefinition->token;
 		fprintf_s(stdout, "// Image %d: %s - %u\n", imageIndex, image->name, image->typeStart);
-
-		// Also stealing some code from a friend, branw @ https://github.com/branw/pogo-proto-dumper
-		for (TypeDefinitionIndex i = image->typeStart; i < image->typeStart + image->typeCount; ++i)
-		{
-			Il2CppTypeDefinition* type = GetTypeDefFromIndex(i);
-			type_index_mapping.insert_or_assign(type->byvalTypeIndex, i);
-		}
 	}
 }
