@@ -124,21 +124,31 @@ char* get_type_name(Il2CppType* pType, bool* isClass = 0)
 void dump_method(MethodIndex idx)
 {
 	Il2CppMethodDefinition* pDef = GetMethodDefinition(idx);
-	Il2CppTypeDefinition* pType = GetTypeDefFromIndex(pDef->declaringType);
-	char* szNamespace = GetString(pType->namespaceIndex);
-	char* szClass = GetString(pType->nameIndex);
 	fprintf_s(stdout, "\t");
-	if (strcmp(szNamespace, "") && !strstr(szNamespace, "\\x"))
-		fprintf_s(stdout, "%s.", szNamespace);
-	if (strcmp(szClass, "") && !strstr(szClass, "\\x"))
-		fprintf_s(stdout, "%s.", szClass);
-	fprintf_s(stdout, "%s(", GetString(pDef->nameIndex));
+	Il2CppType* pReturnType = GetTypeFromTypeIndex(pDef->returnType);
+
+	if ((pDef->flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK) == METHOD_ATTRIBUTE_PRIVATE)
+		fprintf_s(stdout, "private ");
+	if ((pDef->flags & METHOD_ATTRIBUTE_MEMBER_ACCESS_MASK) == METHOD_ATTRIBUTE_PUBLIC)
+		fprintf_s(stdout, "public ");
+	if (pDef->flags & METHOD_ATTRIBUTE_VIRTUAL)
+		fprintf_s(stdout, "virtual ");
+	//if (pDef->flags & METHOD_ATTRIBUTE_FINAL) // No idea what METHOD_ATTRIBUTE_FINAL means but I only see it on standard lib functions so ignoring for now.
+	//	fprintf_s(stdout, "final ");
+	if (pDef->flags & METHOD_ATTRIBUTE_STATIC)
+		fprintf_s(stdout, "static ");
+
+	fprintf_s(stdout, "%s %s(", get_type_name(pReturnType), GetString(pDef->nameIndex));
 	for (int i = 0; i < pDef->parameterCount; ++i)
 	{
 		Il2CppParameterDefinition* pParam = GetParameterFromIndex(pDef->parameterStart + i);
 		char* szParamName = GetString(pParam->nameIndex);
 		Il2CppType* pType = GetTypeFromTypeIndex(pParam->typeIndex);
 		char* szTypeName = get_type_name(pType);
+		if (pType->attrs & PARAM_ATTRIBUTE_OPTIONAL)
+			fprintf_s(stdout, "optional ");
+		if (pType->attrs & PARAM_ATTRIBUTE_OUT)
+			fprintf_s(stdout, "out ");
 		if (i != pDef->parameterCount - 1)
 		{
 			fprintf_s(stdout, "%s %s, ", szTypeName, szParamName);
@@ -219,12 +229,14 @@ void dump_field(FieldIndex idx)
 	Il2CppType* pType = GetTypeFromTypeIndex(pField->typeIndex);
 	Il2CppFieldDefaultValue* pDefault = GetFieldDefaultFromIndex(idx);
 	fprintf_s(stdout, "\t");
-	if (pType->attrs & FIELD_ATTRIBUTE_PRIVATE)
+	if ((pType->attrs & FIELD_ATTRIBUTE_PRIVATE) == FIELD_ATTRIBUTE_PRIVATE)
 		fprintf_s(stdout, "private ");
-	if (pType->attrs & FIELD_ATTRIBUTE_PUBLIC)
+	if ((pType->attrs & FIELD_ATTRIBUTE_PUBLIC) == FIELD_ATTRIBUTE_PUBLIC)
 		fprintf_s(stdout, "public ");
 	if (pType->attrs & FIELD_ATTRIBUTE_STATIC)
 		fprintf_s(stdout, "static ");
+	//if (pType->attrs & FIELD_ATTRIBUTE_INIT_ONLY) // This works just not very useful information.
+	//	fprintf_s(stdout, "readonly ");
 	fprintf_s(stdout, "%s %s", get_type_name(pType), GetString(pField->nameIndex));
 	if (pDefault && pDefault->dataIndex != -1)
 	{
@@ -275,9 +287,25 @@ void dump_field(FieldIndex idx)
 
 void dump_class(Il2CppTypeDefinition* pDef)
 {
-	fprintf_s(stdout, "// Namespace: %s\nclass %s // TypeDefinitionIndex: %d\n{\n", GetString(pDef->namespaceIndex), GetString(pDef->nameIndex), type_index_mapping[pDef->byvalTypeIndex]);
+	fprintf_s(stdout, "// Namespace: %s\n", GetString(pDef->namespaceIndex));
+	
+	if (pDef->flags & TYPE_ATTRIBUTE_SERIALIZABLE)
+		fprintf_s(stdout, "[Serializable]\n");
 
+	if ((pDef->flags & TYPE_ATTRIBUTE_VISIBILITY_MASK) == TYPE_ATTRIBUTE_PUBLIC)
+		fprintf_s(stdout, "public ");
+	if (pDef->flags & TYPE_ATTRIBUTE_ABSTRACT)
+		fprintf_s(stdout, "abstract ");
+	if (pDef->flags & TYPE_ATTRIBUTE_SEALED)
+		fprintf_s(stdout, "sealed ");
+	
+	if (pDef->flags & TYPE_ATTRIBUTE_INTERFACE)
+		fprintf_s(stdout, "interface ");
+	else
+		fprintf_s(stdout, "class ");
+	fprintf_s(stdout, "%s // TypeDefinitionIndex: %d\n{\n", GetString(pDef->nameIndex), type_index_mapping[pDef->byvalTypeIndex]);
 
+	
 	fprintf_s(stdout, "\t// Fields\n");
 	for (FieldIndex i = pDef->fieldStart; i < (pDef->fieldStart + pDef->field_count); ++i)
 	{
