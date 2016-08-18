@@ -82,6 +82,7 @@ void LoadMetadata(char* szFile)
 
 	pMetadataHdr = (Il2CppGlobalMetadataHeader*)malloc(uiSize);
 	fread((void*)pMetadataHdr, uiSize, 1, pFile);
+	fclose(pFile);
 
 	if (pMetadataHdr->sanity != 0xFAB11BAF)
 	{

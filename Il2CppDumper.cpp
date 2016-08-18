@@ -343,6 +343,7 @@ void LoadIl2CppLib(char* szFile)
 
 	pLibIl2Cpp = (elf_header*)malloc(uiSize);
 	fread((void*)pLibIl2Cpp, uiSize, 1, pFile);
+	fclose(pFile);
 
 	if (pLibIl2Cpp->m_dwFormat != 0x464c457f)
 	{
