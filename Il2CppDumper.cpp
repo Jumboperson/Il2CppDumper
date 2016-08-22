@@ -158,7 +158,7 @@ void dump_method(MethodIndex idx)
 			fprintf_s(stdout, "%s %s", szTypeName, szParamName);
 		}
 	}
-	fprintf_s(stdout, "); // %x\n", pCodeRegistration->methodPointers[idx]);
+	fprintf_s(stdout, "); // %x\n", pCodeRegistration->methodPointers[pDef->methodIndex]);
 }
 
 union MultiType
