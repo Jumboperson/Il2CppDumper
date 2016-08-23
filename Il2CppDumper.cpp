@@ -355,8 +355,8 @@ void LoadIl2CppLib(char* szFile)
 	// These two pointers are the first two arguments passed to il2cpp::vm::MetadataCache::Register in the libil2cpp.so binary.
 	// Updating them manually should be fairly trivial, just find where il2cpp::vm::MetadataCache::Register is called and use the first two args for \
 	  code and metadata respectively.
-	pCodeRegistration = (Il2CppCodeRegistration*)MapVATR(0x1473AF8, pLibIl2Cpp);
-	pMetadataRegistration = (Il2CppMetadataRegistration*)MapVATR(0x14957F4, pLibIl2Cpp);
+	pCodeRegistration = (Il2CppCodeRegistration*)MapVATR(0x14860F8, pLibIl2Cpp);
+	pMetadataRegistration = (Il2CppMetadataRegistration*)MapVATR(0x14A7F78, pLibIl2Cpp);
 
 	// Fixes so that the code in il2cpp_utils.cpp and dumping funcstions above works...
 	pCodeRegistration->methodPointers = (uint32_t*)MapVATR((uint32_t)pCodeRegistration->methodPointers, pLibIl2Cpp);
@@ -373,8 +373,8 @@ void LoadIl2CppLib(char* szFile)
 int main(uint16_t argc, char** argv)
 {
 	// Hardcoded cause I'm lazy
-	LoadMetadata("C:\\Projects\\Android\\Il2CppDumper\\global-metadata.dat");
-	LoadIl2CppLib("C:\\Projects\\Android\\PokeGo\\0.33.0\\libil2cpp.so");
+	LoadMetadata("C:\\Projects\\Android\\PokeGo\\0.35.0\\assets\\bin\\Data\\Managed\\Metadata\\global-metadata.dat");
+	LoadIl2CppLib("libil2cpp.so");
 
 	//for (uint32_t i = 0; i < pCodeRegistration->methodPointersCount; ++i)
 	//	dump_method(i);
