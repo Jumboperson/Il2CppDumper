@@ -73,6 +73,11 @@ char* GetDefaultValueFromIndex(DefaultValueDataIndex idx)
 	return ((char*)GetOffPtr(pMetadataHdr->fieldAndParameterDefaultValueDataOffset)) + idx;
 }
 
+int32_t GetFieldOffsetFromIndex(FieldIndex idx)
+{
+	return pMetadataRegistration->fieldOffsets[idx];
+}
+
 void LoadMetadata(char* szFile)
 {
 	FILE* pFile = fopen(szFile, "rb");

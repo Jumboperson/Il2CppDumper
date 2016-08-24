@@ -30,4 +30,6 @@ Il2CppFieldDefaultValue* GetFieldDefaultFromIndex(FieldIndex idx);
 
 char* GetDefaultValueFromIndex(DefaultValueDataIndex idx);
 
+int32_t GetFieldOffsetFromIndex(FieldIndex idx);
+
 void LoadMetadata(char* szFile);

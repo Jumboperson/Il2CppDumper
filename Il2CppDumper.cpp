@@ -228,6 +228,7 @@ void dump_field(FieldIndex idx)
 	Il2CppFieldDefinition* pField = GetFieldDefFromIndex(idx);
 	Il2CppType* pType = GetTypeFromTypeIndex(pField->typeIndex);
 	Il2CppFieldDefaultValue* pDefault = GetFieldDefaultFromIndex(idx);
+
 	fprintf_s(stdout, "\t");
 	if ((pType->attrs & FIELD_ATTRIBUTE_PRIVATE) == FIELD_ATTRIBUTE_PRIVATE)
 		fprintf_s(stdout, "private ");
@@ -282,7 +283,10 @@ void dump_field(FieldIndex idx)
 			}
 		}
 	}
-	fputs(";\n", stdout);
+	if (!(pType->attrs & FIELD_ATTRIBUTE_STATIC))
+		fprintf_s(stdout, "; // 0x%x\n", GetFieldOffsetFromIndex(idx));
+	else
+		fprintf_s(stdout, ";\n");
 }
 
 void dump_class(TypeDefinitionIndex idx)
@@ -361,6 +365,7 @@ void LoadIl2CppLib(char* szFile)
 	// Fixes so that the code in il2cpp_utils.cpp and dumping funcstions above works...
 	pCodeRegistration->methodPointers = (uint32_t*)MapVATR((uint32_t)pCodeRegistration->methodPointers, pLibIl2Cpp);
 
+	pMetadataRegistration->fieldOffsets = (int32_t*)MapVATR((uint32_t)pMetadataRegistration->fieldOffsets, pLibIl2Cpp);
 	pMetadataRegistration->typeDefinitionsSizes = (Il2CppTypeDefinitionSizes*)MapVATR((uint32_t)pMetadataRegistration->typeDefinitionsSizes, pLibIl2Cpp);
 	pMetadataRegistration->types = (Il2CppType**)MapVATR((uint32_t)pMetadataRegistration->types, pLibIl2Cpp);
 	for (int i = 0; i < pMetadataRegistration->typesCount; ++i)
