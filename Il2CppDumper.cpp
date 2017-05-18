@@ -378,7 +378,7 @@ void LoadIl2CppLib(char* szFile)
 int main(uint16_t argc, char** argv)
 {
 	// Hardcoded cause I'm lazy
-	LoadMetadata("C:\\Projects\\Android\\PokeGo\\0.35.0\\assets\\bin\\Data\\Managed\\Metadata\\global-metadata.dat");
+	LoadMetadata("global-metadata.dat");
 	LoadIl2CppLib("libil2cpp.so");
 
 	//for (uint32_t i = 0; i < pCodeRegistration->methodPointersCount; ++i)
